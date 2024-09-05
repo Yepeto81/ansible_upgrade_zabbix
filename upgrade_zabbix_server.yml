@@ -7,3 +7,13 @@
       ansible.builtin.systemd:
         name: zabbix-server
         state: stopped
+    - name: Download Zabbix repository for version 6.4 (Ubuntu 22.04)
+      ansible.builtin.get_url:
+        url: "https://repo.zabbix.com/zabbix/6.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_latest+ubuntu22.04_all.deb"
+        dest: "/tmp/zabbix-release_6.4.deb"
+    - name: Install Zabbix repository package
+      ansible.builtin.dpkg:
+        name: "/tmp/zabbix-release_6.4.deb"
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes  
