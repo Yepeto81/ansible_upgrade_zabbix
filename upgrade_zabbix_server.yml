@@ -1,1 +1,9 @@
 ---
+- name: Upgrade Zabbix Server from 6.2 to 6.4
+  hosts: zabbix_servers
+  become: yes
+  tasks:
+    - name: Stop Zabbix server
+      ansible.builtin.systemd:
+        name: zabbix-server
+        state: stopped
