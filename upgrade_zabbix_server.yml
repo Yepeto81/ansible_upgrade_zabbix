@@ -3,6 +3,10 @@
 - hosts: zabbix_servers
   become: yes
 
+  vars:
+    zabbix_current_version: "6.2"
+    zabbix_target_version: "6.4"
+
   tasks:
     - name: Stop Zabbix server
       systemd:
@@ -21,10 +25,10 @@
         name: zabbix-release
         state: absent
 
-    - name: Create Zabbix 6.4 repository file
+    - name: Create Zabbix {{ zabbix_target_version }} repository file
       copy:
         content: |
-          deb https://repo.zabbix.com/zabbix/6.4/ubuntu/ jammy main
+          deb https://repo.zabbix.com/zabbix/{{ zabbix_target_version }}/ubuntu/ jammy main
         dest: /etc/apt/sources.list.d/zabbix.list
         mode: '0644'
 
@@ -41,7 +45,7 @@
         name:
           - zabbix-server-mysql
           - zabbix-frontend-php
-          - zabbix-agent          
+          - zabbix-agent
           - zabbix-apache-conf
         state: latest
         update_cache: yes
@@ -57,3 +61,7 @@
         name: zabbix-server
         state: started
         enabled: yes
+
+    - name: Update variable for current Zabbix version
+      set_fact:
+        zabbix_current_version: "{{ zabbix_target_version }}"
