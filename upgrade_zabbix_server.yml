@@ -4,10 +4,15 @@
   become: yes
 
   vars:
-    zabbix_current_version: "6.2"
-    zabbix_target_version: "6.4"
+    zabbix_current_version: "6.4"
+    zabbix_target_version: "7.0"
 
   tasks:
+    - name: Add Zabbix GPG key
+      apt_key:
+        url: https://repo.zabbix.com/zabbix-official-repo.key
+        state: present
+    
     - name: Stop Zabbix server
       systemd:
         name: zabbix-server
